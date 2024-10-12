@@ -1,0 +1,30 @@
+#!/bin/bash
+
+files_list="skip.txt"
+
+# Read the file containing paths and SHA256 checksums
+while IFS='|' read -r filepath checksum
+do
+    # Trim leading/trailing whitespaces
+    filepath=$(echo "$filepath" | xargs)
+    checksum=$(echo "$checksum" | xargs)
+
+    # Check if the file exists
+    if git diff --cached --name-only | grep -q "$file"; then
+        # Calculate the SHA256 checksum of the file
+        calculated_checksum=$(sha256sum "$filepath" | awk '{print $1}')
+
+        # Compare the calculated checksum with the provided checksum
+        if [ "$checksum" == "$calculated_checksum" ]; then
+            # Unstage the file if the checksums match
+            git reset HEAD "$filepath"
+        else
+            # Show an error message if the checksums do not match
+            echo "Error: SHA256 checksum does not match for file: $filepath"
+            exit 1
+        fi
+    fi
+done < "$files_list"
+
+# Exit successfully if all checks pass
+exit 0
