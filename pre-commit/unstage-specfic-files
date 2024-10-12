@@ -1,0 +1,11 @@
+#!/bin/sh
+
+# List of files to prevent from being staged
+FILES_TO_SKIP="path/to/file1 path/to/file2"
+
+for file in $FILES_TO_SKIP; do
+    if git diff --cached --name-only | grep -q "$file"; then
+        git reset HEAD "$file"
+    fi
+done
+exit 0
