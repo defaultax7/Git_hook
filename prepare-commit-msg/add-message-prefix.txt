@@ -1,0 +1,5 @@
+#!/bin/sh
+PREFIX="Testing"
+COMMIT_MSG=$(cat "$1")
+
+echo "$PREFIX $COMMIT_MSG" > "$1"
