@@ -4,7 +4,10 @@ COMMIT_MSG=$(cat "$1")
 if [[ $BRANCH_NAME =~ [^/]+$ ]]; then
 	TEMP=${BASH_REMATCH[0]}
 	if [[ $TEMP =~ ^[A-Z]+-[0-9]+ ]]; then
-		echo "${BASH_REMATCH[0]} $COMMIT_MSG" > "$1"
+		PREFIX=${BASH_REMATCH[0]}
+		if [[ ! $COMMIT_MSG =~ ^$PREFIX ]]; then
+			echo "$PREFIX $COMMIT_MSG" > "$1"
+		fi
 	fi
 else
     echo "$COMMIT_MSG" > "$1"
